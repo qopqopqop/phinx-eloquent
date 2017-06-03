@@ -1,6 +1,6 @@
 <?php
 
-namespace PhinxEloquent;
+namespace PhinxEloquent\Seed;
 
 use Phinx\Seed\AbstractSeed;
 use Illuminate\Database\Capsule\Manager as CapsuleManager;
