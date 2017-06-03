@@ -1,0 +1,30 @@
+{
+    "name": "qopqopqop/phinx-eloquent",
+    "description": "",
+    "type": "library",
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "keywords": [ ],
+    "homepage": "",
+    "require-dev": {
+        "php": ">=5.6.0"
+    },
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "qopqopqop",
+            "email": "petermintt@qopqopqop.com",
+            "homepage": "",
+            "role" : ""
+        }
+    ],
+    "support": {
+        "email": "e"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhinxEloquent\\": "src/"
+        }
+    }
+}
