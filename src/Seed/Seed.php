@@ -80,10 +80,9 @@ class Seed extends AbstractSeed
         return $xml;
     }
 
-    public function getExcel($file)
+    public function getExcel($filename)
     {
 
-        $filename = __DIR__ . '/' . $file;
         $inputFileType = PHPExcel_IOFactory::identify($filename);
         $objReader = PHPExcel_IOFactory::createReader($inputFileType); 
         $this->excel = $objReader->load($filename); 
