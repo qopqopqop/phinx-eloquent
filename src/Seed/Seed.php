@@ -7,6 +7,8 @@ use Illuminate\Database\Capsule\Manager as CapsuleManager;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
 use Illuminate\Database\Schema\Blueprint as Blueprint;
+use PHPExcel;
+use PHPExcel_IOFactory;
 
 class Seed extends AbstractSeed
 {
