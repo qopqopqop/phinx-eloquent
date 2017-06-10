@@ -22,6 +22,13 @@ class Seed extends AbstractSeed
      
     public $capsuleManager;
     public $schema;
+     
+    public function run() {
+    
+        $this->ORMConnect();
+        
+    } 
+     
     public function ORMConnect() {
         
         $this->capsuleManager = new CapsuleManager;
@@ -59,11 +66,51 @@ class Seed extends AbstractSeed
       return $text;
     }
     
-    public function run() {
-    
-        $this->ORMConnect();
-        
+      function getXml($url)
+    {
+        echo "Fetching XML from '{$url}'..." . PHP_EOL;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        $xml = simplexml_load_string($output);
+        return $xml;
     }
+
+    public function getExcel($file)
+    {
+
+        $filename = __DIR__ . '/' . $file;
+        $inputFileType = PHPExcel_IOFactory::identify($filename);
+        $objReader = PHPExcel_IOFactory::createReader($inputFileType); 
+        $this->excel = $objReader->load($filename); 
+        return true;
+
+    }
+
+    public function getWorkSheetData($worksheet = false)
+    {
+        if ($worksheet) {
+            $objWorksheet = $this->excel->getSheet($worksheet);
+            $maxCell = $objWorksheet->getHighestRowAndColumn();
+            $data = $objWorksheet->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
+            $all_rows = array();
+            $header = null;
+            foreach ($data as $row) {
+                if ($header === null) {
+                    $header = $row;
+                } else {
+                }
+                $all_rows[] = array_combine($header, $row);
+            }
+            return $all_rows;
+        } else {
+            return null;
+        }
+    }
+     
+   
     
     
 }
