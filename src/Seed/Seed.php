@@ -91,11 +91,16 @@ class Seed extends AbstractSeed
 
     }
 
-    public function getWorkSheetData($worksheet = false)
+    public function getWorkSheetData($worksheet = null, $range = null)
     {
-        if ($worksheet) {
+        if ($worksheet !== null) {
             $objWorksheet = $this->excel->getSheet($worksheet);
             $maxCell = $objWorksheet->getHighestRowAndColumn();
+             if ($range !== null) {
+                $data = $objWorksheet->rangeToArray($range);  
+            }else{
+                $data = $objWorksheet->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);    
+            }
             $data = $objWorksheet->rangeToArray('A1:' . $maxCell['column'] . $maxCell['row']);
             $all_rows = array();
             $header = null;
