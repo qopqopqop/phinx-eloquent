@@ -99,9 +99,9 @@ class Seed extends AbstractSeed
         $this->schema = $this->capsuleManager->schema();
     }
     
-    public static function autoload() 
+    public static function autoload($dir) 
 	{	$files = [];
-        foreach( glob(__dir__.'/../../../*/models/*.php') as $file ){ 
+        foreach( glob($dir.'/../../../*/models/*.php') as $file ){ 
          if( !strrpos($file,'/admin')) { 
            include_once $file;
           }
