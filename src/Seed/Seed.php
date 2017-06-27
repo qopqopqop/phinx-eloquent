@@ -25,12 +25,49 @@ class Seed extends AbstractSeed
      
     public $capsuleManager;
     public $schema;
+    protected $excel = null;
+    protected $uploads_path = null;
+    protected $xls_file = null;
      
     public function run() {
-    
+        
+        $this->autoload();
+        $this->uploads_path = __DIR__ . '/../../../../public/assets/uploads/images/';
+        $this->xls_file = __DIR__ . '/import.xls';
+        
         $this->ORMConnect();
+        $this>truncate_everything();
+        
+        //unguard all models
+        \Illuminate\Database\Eloquent\Model::unguard();
+        
+        //load excel
+        if (!$this->getExcel($this->xls_file)) {
+            die('XLS file not found. KIK');
+        };
+        
+        $this->sampleSeed();
+        
         
     } 
+    
+    public function truncate_everything() {
+        
+        $tables = array('table1'); //meter table names aca
+        
+        foreach ($tablesas as $tablex) {
+            $tableAdapter = new Phinx\Db\Adapter\TablePrefixAdapter($this->getAdapter());
+            $tableName = $tablex;
+            $fullTableName = $tableAdapter->getAdapterTableName($tableName);
+
+            if (ENVIRONMENT !== 'production') {
+                $this->getAdapter()->execute(
+                    'TRUNCATE TABLE ' . $fullTableName
+                );
+            }
+
+        }
+    }
      
     public function ORMConnect() {
         
@@ -52,6 +89,16 @@ class Seed extends AbstractSeed
         $this->capsuleManager->bootEloquent();
         $this->schema = $this->capsuleManager->schema();
     }
+    
+    public static function autoload() 
+	{	$files = [];
+        foreach( glob(__dir__.'/../../../*/models/*.php') as $file ){ 
+         if( !strrpos($file,'/admin')) { 
+           include_once $file;
+          }
+        } 
+	
+	}
      
     public function slugify($text)
     {
@@ -111,13 +158,44 @@ class Seed extends AbstractSeed
                 }
                 $all_rows[] = array_combine($header, $row);
             }
-            return $all_rows;
+            
+            $c = new Collection($all_rows);
+            $data = $c->all();
+            file_put_contents(__DIR__.'/worksheet_data_num_'.$worksheet.'json',print_r($data,true));
+            return $data;
+            
         } else {
             return null;
         }
     }
+    
+    public function sampleSeed(){
+                   
+        $data = $this->getWorkSheetData($worksheet_num); //return eloquent collection OR null.
+        
+        echo "Sample Seed run";
+        
+        // for ($x = 1; $x < count($data); $x++) {
+        //     if ( $data[$x]["title"]) { //no procesar si esta es null.
+        //         $sub = [];
+        //         $sub["title"] = $data[$x]["title"];
+        //         $sub["slug"] = $data[$x]["slug"];
+        //         $sub["icon_svg"] = $data[$x]["img"];
+        //         $related_type = $this->getType('Related_type','title',$data[$x]['related_title']);
+        //         if ($related_type) {
+        //             $sub["related_id"] = $related_type->id;    
+        //         }
+        //         Sample_type::create($sub);
+        //     }
+        // }
+                    
+    }        
      
-   
+    public function getType($type,$field,$value) {
+          
+           return $type::where($field,trim($value))->get()->first();
+           
+       }
     
     
 }
