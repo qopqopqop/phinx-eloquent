@@ -25,11 +25,18 @@ class Seed extends AbstractSeed
      
     public $capsuleManager;
     public $schema;
-    protected $excel = null;
-    protected $uploads_path = null;
-    protected $xls_file = null;
+    public $excel = null;
+    public $uploads_path = null;
+    public $xls_file = null;
      
     public function run() {
+        
+     
+        
+        
+    } 
+    
+    public function run_sample() {
         
         $this->autoload();
         $this->uploads_path = __DIR__ . '/../../../../public/assets/uploads/images/';
@@ -37,7 +44,7 @@ class Seed extends AbstractSeed
         
         $this->ORMConnect();
         
-        $tables = array(''); //meter table names aca
+        $tables = array(); //meter table names aca
         $this>truncate_everything($tables);
         
         //unguard all models
@@ -140,7 +147,7 @@ class Seed extends AbstractSeed
 
     }
 
-    public function getWorkSheetData($worksheet = null, $range = null)
+   public function getWorkSheetData($worksheet = null, $range = null)
     {
         if ($worksheet !== null) {
             $objWorksheet = $this->excel->getSheet($worksheet);
@@ -160,21 +167,19 @@ class Seed extends AbstractSeed
                 }
                 $all_rows[] = array_combine($header, $row);
             }
-            
-            $c = new Collection($all_rows);
-            $data = $c->all();
-            file_put_contents(__DIR__.'/worksheet_data_num_'.$worksheet.'json',print_r($data,true));
-            return $data;
-            
+            return $all_rows;
         } else {
             return null;
         }
     }
     
     public function sampleSeed(){
-                   
-        $data = $this->getWorkSheetData($worksheet_num); //return eloquent collection OR null.
-        
+        $worksheet_num = 0;
+        $all_rows = $this->getWorkSheetData($worksheet_num); //return eloquent collection OR null.
+         
+        $c = new Collection($all_rows);
+        $data = $c->all();
+        file_put_contents(__DIR__.'/worksheet_data_num_'.$worksheet_num.'json',print_r($data,true));
         echo "Sample Seed run";
         
         // for ($x = 1; $x < count($data); $x++) {
