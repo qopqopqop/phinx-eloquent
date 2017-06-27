@@ -36,7 +36,9 @@ class Seed extends AbstractSeed
         $this->xls_file = __DIR__ . '/import.xls';
         
         $this->ORMConnect();
-        $this>truncate_everything();
+        
+        $tables = array(''); //meter table names aca
+        $this>truncate_everything($tables);
         
         //unguard all models
         \Illuminate\Database\Eloquent\Model::unguard();
@@ -51,11 +53,11 @@ class Seed extends AbstractSeed
         
     } 
     
-    public function truncate_everything() {
+    public function truncate_everything($tables) {
         
-        $tables = array('table1'); //meter table names aca
+       
         
-        foreach ($tablesas as $tablex) {
+        foreach ($tables as $tablex) {
             $tableAdapter = new Phinx\Db\Adapter\TablePrefixAdapter($this->getAdapter());
             $tableName = $tablex;
             $fullTableName = $tableAdapter->getAdapterTableName($tableName);
